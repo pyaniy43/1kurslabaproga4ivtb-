@@ -2,30 +2,30 @@ program labachetire;
 uses Crt;
 
 const
-  MAX_SIZE = 10;  // Максимальное количество элементов в стеке
+  MAX_SIZE = 10;  
 
 type
   // Структура для одного элемента (с двумя значениями)
   TElement = record
-    a: integer;     // Первое значение (число)
-    b: string[20];  // Второе значение (текст)
+    a: integer;  
+    b: string[20];
   end;
 
   // Структура СТЕК
   TStack = record
     data: array[1..MAX_SIZE] of TElement;
-    top: integer;  // Указатель на вершину стека
+    top: integer; 
   end;
 
 var
-  stack: TStack;   // Наш стек
-  choice: integer; // Выбор в меню
+  stack: TStack;   
+  choice: integer;
 
 // ========== 1. ИНИЦИАЛИЗАЦИЯ СТЕКА ==========
 procedure InitStack(var s: TStack);
 begin
-  s.top := 0; 
-  writeln('Стек создан!');
+ s.top := 0;
+ writeln('Стек создан!');
 end;
 
 // ========== 2. PUSH - ДОБАВЛЕНИЕ ЭЛЕМЕНТА НА ВЕРШИНУ СТЕКА ==========
@@ -33,24 +33,13 @@ procedure Push(var s: TStack);
 var
   newElement: TElement;
 begin
-  // Проверяем, не полон ли стек
   if s.top >= MAX_SIZE then
   begin
     writeln('Переполнение стека! Максимум ', MAX_SIZE, ' элементов');
-    writeln('Сначала удалите элементы!');
+    writeln('Сначала удалите элементы');
     exit;
   end;
-  
-  // Если осталось мало места, показываем предупреждение
-  if s.top = MAX_SIZE - 1 then
-  begin
-    writeln('ВНИМАНИЕ: Осталось место только для 1 элемента!');
-  end
-  else if s.top = MAX_SIZE - 2 then
-  begin
-    writeln('ВНИМАНИЕ: Осталось место только для 2 элементов!');
-  end;
-  
+ 
   writeln('=== ДОБАВЛЕНИЕ ЭЛЕМЕНТА ===');
   write('Первое значение: ');
   readln(newElement.a);
@@ -188,11 +177,10 @@ begin
    
       0: writeln('Программа завершена.');
          
-      else  // Неправильный выбор
+      else  
         writeln('Введите число от 0 до 4');
     end;
     
-    // Пауза, чтобы увидеть результат
     if choice <> 0 then
     begin
       writeln;
