@@ -1,4 +1,129 @@
-then
+program labachetire;
+uses Crt;
+
+type
+  PElement = ^TElement;  // Указатель на элемент
+  TElement = record
+    a: integer;
+    b: string[20];
+    next: PElement;  // Указатель на следующий элемент
+  end;
+  
+var
+  stackTop: PElement;  // Указатель на вершину
+  elementCount: integer;  // счетчик
+  choice: integer;
+
+// ========== 1. ИНИЦИАЛИЗАЦИЯ СТЕКА ==========
+procedure InitStack;
+begin
+  stackTop := nil;  // Устанавливаем вершину в nil (пусто)
+  elementCount := 0;
+  writeln('Стек создан!');
+end;
+
+// ========== 2. PUSH - ДОБАВЛЕНИЕ ЭЛЕМЕНТА НА ВЕРШИНУ СТЕКА ==========
+procedure Push;
+var
+  newElement: PElement;
+begin
+  writeln('=== ДОБАВЛЕНИЕ ЭЛЕМЕНТА ===');
+  New(newElement);
+  
+  write('Первое значение: ');
+  readln(newElement^.a);
+  
+  write('Второе значение: ');
+  readln(newElement^.b);
+  
+  newElement^.next := stackTop;
+  stackTop := newElement;
+  elementCount := elementCount + 1;
+  
+  writeln;
+  writeln('Элемент (', newElement^.a, ', "', newElement^.b, '") добавлен!');
+  writeln('Теперь в стеке: ', elementCount, ' элементов');
+end;
+
+// ========== 3. POP - УДАЛЕНИЕ ЭЛЕМЕНТА С ВЕРШИНЫ СТЕКА ==========
+procedure Pop;
+var
+  temp: PElement;
+begin
+  if stackTop = nil then 
+  begin
+    writeln('Стек пуст!');
+    exit;
+  end;
+  
+  writeln('=== УДАЛЕНИЕ ЭЛЕМЕНТА С ВЕРШИНЫ СТЕКА ===');
+  writeln('Удален элемент с вершины стека:');
+  writeln('  a = ', stackTop^.a);
+  writeln('  b = "', stackTop^.b, '"');
+  
+  temp := stackTop;
+  stackTop := stackTop^.next;
+  Dispose(temp);
+  elementCount := elementCount - 1;
+  
+  writeln;
+  if stackTop = nil then
+    writeln('Теперь стек ПУСТ')
+  else
+    writeln('Теперь в стеке: ', elementCount, ' элементов');
+end;
+
+// ========== 4. PEEK - ПРОСМОТР ЭЛЕМЕНТА НА ВЕРШИНЕ СТЕКА ==========
+procedure Peek;
+begin
+  if stackTop = nil then
+  begin
+    writeln('Стек пуст');
+    exit;
+  end;
+  
+  writeln('=== ЭЛЕМЕНТ НА ВЕРШИНЕ СТЕКА ===');
+  writeln('Последний добавленный элемент:');
+  writeln('  a = ', stackTop^.a);
+  writeln('  b = "', stackTop^.b, '"');
+end;
+
+// ========== 5. ПРОСМОТР ВСЕХ ЭЛЕМЕНТОВ СТЕКА ==========
+procedure DisplayAll;
+var
+  current: PElement;
+  i: integer;
+begin
+  if stackTop = nil then
+  begin
+    writeln('=== СТЕК ПУСТ ===');
+    writeln('Нет элементов для отображения.');
+    exit;
+  end;
+  
+  writeln('=== ВСЕ ЭЛЕМЕНТЫ СТЕКА ===');
+  writeln('Всего элементов: ', elementCount);
+  writeln('-------------------------');
+  
+  current := stackTop;
+  i := 1;
+  
+  while current <> nil do
+  begin
+    writeln(i, '. a = ', current^.a, ', b = "', current^.b, '"');
+    current := current^.next;
+    i := i + 1;
+  end;
+  
+  writeln('-------------------------');
+end;
+
+// ========== 6. ОЧИСТКА ВСЕГО СТЕКА ==========
+procedure ClearStack;
+var
+  temp: PElement;
+begin
+  if stackTop = nil then
   begin
     writeln('Стек уже пуст!');
     exit;
