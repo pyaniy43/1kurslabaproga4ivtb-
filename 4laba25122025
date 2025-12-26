@@ -1,136 +1,20 @@
-program labachetire;
-uses Crt;
-
-const
-  MAX_SIZE = 10;  
-
-type
-  // Структура для одного элемента (с двумя значениями)
-  TElement = record
-    a: integer;  
-    b: string[20];
-  end;
-
-  // Структура СТЕК
-  TStack = record
-    data: array[1..MAX_SIZE] of TElement;
-    top: integer; 
-  end;
-
-var
-  stack: TStack;   
-  choice: integer;
-
-// ========== 1. ИНИЦИАЛИЗАЦИЯ СТЕКА ==========
-procedure InitStack(var s: TStack);
-begin
- s.top := 0;
- writeln('Стек создан!');
-end;
-
-// ========== 2. PUSH - ДОБАВЛЕНИЕ ЭЛЕМЕНТА НА ВЕРШИНУ СТЕКА ==========
-procedure Push(var s: TStack);
-var
-  newElement: TElement;
-begin
-  if s.top >= MAX_SIZE then
-  begin
-    writeln('Переполнение стека! Максимум ', MAX_SIZE, ' элементов');
-    writeln('Сначала удалите элементы');
-    exit;
-  end;
- 
-  writeln('=== ДОБАВЛЕНИЕ ЭЛЕМЕНТА ===');
-  write('Первое значение: ');
-  readln(newElement.a);
-  
-  write('Второе значение: ');
-  readln(newElement.b);
-  
-  // Добавляем элемент на вершину стека
-  s.top := s.top + 1;
-  s.data[s.top] := newElement;
-  
-  writeln;
-  writeln('Элемент (', newElement.a, ', "', newElement.b, '") добавлен!');
-  writeln('Теперь в стеке: ', s.top, ' элементов');
-  
-  if s.top = MAX_SIZE then
-  begin
-    writeln('ДОСТИГНУТ МАКСИМУМ! В стеке ', MAX_SIZE, ' элементов');
-    writeln('Чтобы добавить новый элемент, сначала удалите старый');
-  end;
-end;
-
-// ========== 3. POP - УДАЛЕНИЕ ЭЛЕМЕНТА С ВЕРШИНЫ СТЕКА ==========
-procedure Pop(var s: TStack);
-begin
-
-  if s.top = 0 then
-  begin
-    writeln('ОШИБКА: Стек пуст, нечего удалять!');
-    writeln('Сначала добавьте элементы!');
-    exit;
-  end;
- 
-  writeln('=== УДАЛЕНИЕ ЭЛЕМЕНТА С ВЕРШИНЫ СТЕКА ===');
-  writeln('Удален элемент с вершины стека:');
-  writeln('  a = ', s.data[s.top].a);
-  writeln('  b = "', s.data[s.top].b, '"');
-  
-  // Удаляем элемент (уменьшаем указатель на вершину)
-  s.top := s.top - 1;
-  
-  writeln;
-  if s.top = 0 then
-    writeln('Теперь стек ПУСТ')
-  else
-    writeln('Теперь в стеке: ', s.top, ' элементов');
-end;
-
-// ========== 4. PEEK - ПРОСМОТР ЭЛЕМЕНТА НА ВЕРШИНЕ СТЕКА ==========
-procedure Peek(var s: TStack);
-begin
-  // Проверяем, не пуст ли стек
-  if s.top = 0 then
-  begin
-    writeln('Стек пуст');
-    writeln('Сначала добавьте элементы');
-    exit;
-  end;
-  
-  // Показываем элемент на вершине стека (без удаления)
-  writeln('=== ЭЛЕМЕНТ НА ВЕРШИНЕ СТЕКА ===');
-  writeln('Последний добавленный элемент (вершина стека):');
-  writeln('  a = ', s.data[s.top].a);
-  writeln('  b = "', s.data[s.top].b, '"');
-end;
-
-// ========== 5. КОЛИЧЕСТВО ЭЛЕМЕНТОВ В СТЕКЕ ==========
-procedure ShowStackSize(var s: TStack);
-begin
-  writeln('=== КОЛИЧЕСТВО ЭЛЕМЕНТОВ ===');
-  writeln('В стеке ', s.top, ' элементов');
-  
-  if s.top = 0 then
-    writeln('Статус: Стек пустует')
-  else if s.top = MAX_SIZE then
-    writeln('Статус: Стек уже заполнен')
-  else
-    writeln('Статус: Свободно мест: ', MAX_SIZE - s.top);
-end;
-
-// ========== 6. ОЧИСТКА ВСЕГО СТЕКА ==========
-procedure ClearStack(var s: TStack);
-begin
-  if s.top = 0 then
+then
   begin
     writeln('Стек уже пуст!');
     exit;
   end;
   
-  s.top := 0;
   writeln('=== ОЧИСТКА СТЕКА ===');
+  writeln('Освобождаем память всех элементов...');
+  
+  while stackTop <> nil do
+  begin
+    temp := stackTop;
+    stackTop := stackTop^.next;
+    Dispose(temp);
+  end;
+  elementCount := 0;
+    
   writeln('Все элементы удалены! Стек теперь пуст.');
 end;
 
@@ -140,43 +24,36 @@ begin
   TextColor(4); 
   writeln('===========================================');
   writeln('1. Очистить стек');
-  writeln('2. Добавить элемент'); //PUSH
-  writeln('3. Удалить последний элемент'); //POP 
-  writeln('4. Последний элемент'); //PEEK
+  writeln('2. Добавить элемент');
+  writeln('3. Удалить последний элемент');
+  writeln('4. Показать все элементы стека');
   writeln('0. Выход');
   writeln('===========================================');
-  writeln('Сейчас в стеке: ', stack.top, ' элементов');
+  writeln('Сейчас в стеке: ', elementCount, ' элементов');
   
-  if stack.top = MAX_SIZE then
-    writeln('Стек заполнен!')
+  if stackTop <> nil then
+    writeln('Вершина стека: (', stackTop^.a, ', "', stackTop^.b, '")')
   else
-    writeln('Свободно мест: ', MAX_SIZE - stack.top);
+    writeln('Вершина стека: пусто');
     
   writeln('===========================================');
   write('Выбор: ');
 end;
 
-// ========== ОСНОВНАЯ ПРОГРАММА ==========
 begin
   // Инициализация стека при запуске программы
-  InitStack(stack);
+  InitStack;
   
   repeat
     Menu;
     readln(choice);
     
     case choice of
-      1: ClearStack(stack);
-         
-      2: Push(stack);
-         
-      3: Pop(stack);
-
-         
-      4: Peek(stack);
-   
+      1: ClearStack;    
+      2: Push;      
+      3: Pop;          
+      4: DisplayAll; 
       0: writeln('Программа завершена.');
-         
       else  
         writeln('Введите число от 0 до 4');
     end;
@@ -185,8 +62,12 @@ begin
     begin
       writeln;
       write('Нажмите Enter для продолжения...');
-      readln;
+      ReadKey;
     end;
     
   until choice = 0;
+
+  // Освобождаем всю память
+  ClearStack;
 end.
+
